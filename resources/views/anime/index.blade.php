@@ -13,7 +13,8 @@
 <div class="mb-3 d-flex flex-wrap gap-2">
     @foreach(['All','Watching','Completed','On Hold','Dropped','Plan to Watch'] as $f)
         <a href="{{ $f === 'All' ? route('anime.index') : route('anime.index', ['status' => $f]) }}"
-           class="badge text-decoration-none {{ request('status') === $f || ($f === 'All' && !request('status')) ? 'bg-danger' : 'bg-secondary' }}">
+           class="badge text-decoration-none"
+           style="{{ (request('status') === $f || ($f === 'All' && !request('status'))) ? 'background:#4f6ef7;color:#fff' : 'background:#eef1ff;color:#4f6ef7' }}">
             {{ $f }}
         </a>
     @endforeach
@@ -33,20 +34,20 @@
                     <td><span class="badge bg-secondary">{{ $a->genre }}</span></td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <div class="progress flex-grow-1" style="height:6px;background:#2d2d4e;min-width:60px;">
-                                @php $pct = $a->episodes > 0 ? min(100, round($a->episodes_watched / $a->episodes * 100)) : 0; @endphp
-                                <div class="progress-bar bg-danger" style="width:{{ $pct }}%"></div>
+                            @php $pct = $a->episodes > 0 ? min(100, round($a->episodes_watched / $a->episodes * 100)) : 0; @endphp
+                            <div class="progress flex-grow-1" style="height:6px;min-width:60px;">
+                                <div class="progress-bar" style="width:{{ $pct }}%;background:#4f6ef7"></div>
                             </div>
                             <small class="text-muted">{{ $a->episodes_watched }}/{{ $a->episodes }}</small>
                         </div>
                     </td>
                     <td>
-                        @php $colors = ['Watching'=>'info','Completed'=>'success','Dropped'=>'danger','On Hold'=>'warning','Plan to Watch'=>'secondary']; @endphp
+                        @php $colors = ['Watching'=>'primary','Completed'=>'success','Dropped'=>'danger','On Hold'=>'warning','Plan to Watch'=>'secondary']; @endphp
                         <span class="badge bg-{{ $colors[$a->status] ?? 'secondary' }}">{{ $a->status }}</span>
                     </td>
                     <td>
                         @if($a->rating)
-                            <span class="text-warning"><i class="bi bi-star-fill"></i> {{ $a->rating }}/10</span>
+                            <span class="text-warning fw-semibold"><i class="bi bi-star-fill"></i> {{ $a->rating }}/10</span>
                         @else
                             <span class="text-muted">—</span>
                         @endif
@@ -67,17 +68,17 @@
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editAnimeModal{{ $a->id }}" tabindex="-1">
                     <div class="modal-dialog modal-lg">
-                        <div class="modal-content" style="background:#1a1a2e;border:1px solid #2d2d4e;">
-                            <div class="modal-header" style="border-color:#2d2d4e;">
-                                <h6 class="modal-title">Edit Anime</h6>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title fw-bold">Edit Anime</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <form method="POST" action="{{ route('anime.update', $a) }}">
                                 @csrf @method('PUT')
                                 <div class="modal-body">
                                     @include('anime._form', ['anime' => $a])
                                 </div>
-                                <div class="modal-footer" style="border-color:#2d2d4e;">
+                                <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                 </div>
@@ -96,17 +97,17 @@
 <!-- Add Anime Modal -->
 <div class="modal fade" id="addAnimeModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
-        <div class="modal-content" style="background:#1a1a2e;border:1px solid #2d2d4e;">
-            <div class="modal-header" style="border-color:#2d2d4e;">
-                <h6 class="modal-title">Add Anime</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title fw-bold">Add Anime</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('anime.store') }}">
                 @csrf
                 <div class="modal-body">
                     @include('anime._form', ['anime' => null])
                 </div>
-                <div class="modal-footer" style="border-color:#2d2d4e;">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-sm btn-primary">Add Anime</button>
                 </div>

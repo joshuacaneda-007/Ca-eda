@@ -21,19 +21,19 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            @if($u->profile_picture)
-                                <img src="{{ Storage::url($u->profile_picture) }}" class="rounded-circle" width="30" height="30" style="object-fit:cover;">
+                            @if($u->profile_picture_base64)
+                                <img src="{{ $u->profile_picture_base64 }}" class="rounded-circle" width="30" height="30" style="object-fit:cover;border:2px solid #dde3f0;">
                             @else
-                                <div class="rounded-circle bg-danger d-flex align-items-center justify-content-center" style="width:30px;height:30px;font-size:.75rem;font-weight:700;">
-                                    {{ strtoupper(substr($u->name,0,1)) }}
+                                <div class="avatar-initials" style="width:30px;height:30px;font-size:.75rem;">
+                                    {{ strtoupper(substr($u->name, 0, 1)) }}
                                 </div>
                             @endif
-                            {{ $u->name }}
+                            <span class="fw-semibold">{{ $u->name }}</span>
                         </div>
                     </td>
-                    <td>{{ $u->email }}</td>
-                    <td><span class="badge {{ $u->role === 'admin' ? 'bg-danger' : 'bg-secondary' }}">{{ ucfirst($u->role) }}</span></td>
-                    <td>{{ $u->created_at->format('M d, Y') }}</td>
+                    <td style="color:var(--text-muted)">{{ $u->email }}</td>
+                    <td><span class="badge {{ $u->role === 'admin' ? 'bg-primary' : 'bg-secondary' }}">{{ ucfirst($u->role) }}</span></td>
+                    <td style="color:var(--text-muted)">{{ $u->created_at->format('M d, Y') }}</td>
                     <td>
                         <button class="btn btn-sm btn-outline-warning me-1"
                             data-bs-toggle="modal" data-bs-target="#editUserModal{{ $u->id }}">
@@ -50,35 +50,35 @@
                 <!-- Edit Modal -->
                 <div class="modal fade" id="editUserModal{{ $u->id }}" tabindex="-1">
                     <div class="modal-dialog">
-                        <div class="modal-content" style="background:#1a1a2e;border:1px solid #2d2d4e;">
-                            <div class="modal-header" style="border-color:#2d2d4e;">
-                                <h6 class="modal-title">Edit User</h6>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title fw-bold">Edit User</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <form method="POST" action="{{ route('users.update', $u) }}">
                                 @csrf @method('PUT')
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label class="form-label small">Name</label>
+                                        <label class="form-label">Name</label>
                                         <input type="text" name="name" class="form-control" value="{{ $u->name }}" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Email</label>
+                                        <label class="form-label">Email</label>
                                         <input type="email" name="email" class="form-control" value="{{ $u->email }}" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">Role</label>
+                                        <label class="form-label">Role</label>
                                         <select name="role" class="form-select">
                                             <option value="user" {{ $u->role==='user'?'selected':'' }}>User</option>
                                             <option value="admin" {{ $u->role==='admin'?'selected':'' }}>Admin</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label small">New Password <span class="text-muted">(leave blank to keep)</span></label>
+                                        <label class="form-label">New Password <span class="text-muted">(leave blank to keep)</span></label>
                                         <input type="password" name="password" class="form-control" placeholder="New password">
                                     </div>
                                 </div>
-                                <div class="modal-footer" style="border-color:#2d2d4e;">
+                                <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                     <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                 </div>
@@ -97,35 +97,35 @@
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content" style="background:#1a1a2e;border:1px solid #2d2d4e;">
-            <div class="modal-header" style="border-color:#2d2d4e;">
-                <h6 class="modal-title">Add New User</h6>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title fw-bold">Add New User</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <form method="POST" action="{{ route('users.store') }}">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label small">Name</label>
+                        <label class="form-label">Name</label>
                         <input type="text" name="name" class="form-control" placeholder="Full name" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small">Email</label>
+                        <label class="form-label">Email</label>
                         <input type="email" name="email" class="form-control" placeholder="Email address" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small">Role</label>
+                        <label class="form-label">Role</label>
                         <select name="role" class="form-select">
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label small">Password</label>
+                        <label class="form-label">Password</label>
                         <input type="password" name="password" class="form-control" placeholder="Min. 6 characters" required>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-color:#2d2d4e;">
+                <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-sm btn-primary">Add User</button>
                 </div>

@@ -10,7 +10,7 @@
                 <i class="bi bi-people-fill stat-icon"></i>
                 <div>
                     <div class="fs-4 fw-bold">{{ $totalUsers }}</div>
-                    <div class="text-muted small">Total Users</div>
+                    <div class="small" style="color:var(--text-muted)">Total Users</div>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <i class="bi bi-collection-play-fill stat-icon"></i>
                 <div>
                     <div class="fs-4 fw-bold">{{ $totalAnime }}</div>
-                    <div class="text-muted small">Total Anime Records</div>
+                    <div class="small" style="color:var(--text-muted)">Total Anime Records</div>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <i class="bi bi-bookmark-heart-fill stat-icon"></i>
                 <div>
                     <div class="fs-4 fw-bold">{{ $myAnime }}</div>
-                    <div class="text-muted small">My Anime</div>
+                    <div class="small" style="color:var(--text-muted)">My Anime</div>
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@
 <div class="card">
     <div class="card-header py-2 px-3 d-flex justify-content-between align-items-center">
         <small class="fw-semibold">Recently Added</small>
-        <a href="{{ route('anime.index') }}" class="btn btn-sm btn-outline-danger">View All</a>
+        <a href="{{ route('anime.index') }}" class="btn btn-sm btn-outline-primary">View All</a>
     </div>
     <div class="table-responsive">
         <table class="table table-hover mb-0">
@@ -71,12 +71,10 @@
             <tbody>
                 @forelse($recentAnime as $a)
                 <tr>
-                    <td>{{ $a->title }}</td>
+                    <td class="fw-semibold">{{ $a->title }}</td>
                     <td><span class="badge bg-secondary">{{ $a->genre }}</span></td>
                     <td>
-                        @php
-                            $colors = ['Watching'=>'info','Completed'=>'success','Dropped'=>'danger','On Hold'=>'warning','Plan to Watch'=>'secondary'];
-                        @endphp
+                        @php $colors = ['Watching'=>'primary','Completed'=>'success','Dropped'=>'danger','On Hold'=>'warning','Plan to Watch'=>'secondary']; @endphp
                         <span class="badge bg-{{ $colors[$a->status] ?? 'secondary' }}">{{ $a->status }}</span>
                     </td>
                     <td>{{ $a->rating ? $a->rating . '/10' : '—' }}</td>
@@ -93,8 +91,8 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script>
-Chart.defaults.color = '#a0a0c0';
-Chart.defaults.borderColor = '#2d2d4e';
+Chart.defaults.color = '#7a8aaa';
+Chart.defaults.borderColor = '#dde3f0';
 
 const statusData = @json($statusCounts);
 const genreData  = @json($genreCounts);
@@ -103,7 +101,7 @@ new Chart(document.getElementById('statusChart'), {
     type: 'doughnut',
     data: {
         labels: Object.keys(statusData),
-        datasets: [{ data: Object.values(statusData), backgroundColor: ['#17a2b8','#28a745','#ffc107','#dc3545','#6c757d'], borderWidth: 0 }]
+        datasets: [{ data: Object.values(statusData), backgroundColor: ['#4f6ef7','#28a745','#ffc107','#e94560','#aab4cc'], borderWidth: 2, borderColor: '#fff' }]
     },
     options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
 });
@@ -112,7 +110,7 @@ new Chart(document.getElementById('genreChart'), {
     type: 'bar',
     data: {
         labels: Object.keys(genreData),
-        datasets: [{ label: 'Count', data: Object.values(genreData), backgroundColor: '#e94560', borderRadius: 6 }]
+        datasets: [{ label: 'Count', data: Object.values(genreData), backgroundColor: '#4f6ef7', borderRadius: 6 }]
     },
     options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
 });
